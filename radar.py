@@ -23,7 +23,7 @@ BLUE = (0, 0, 255, 255)
 PURPLE = (255, 0, 255, 255)
 DEBUG = (200, 10, 200, 255)
 
-#create display window
+#create window
 SCREEN_HEIGHT = 1024
 SCREEN_WIDTH = 2048
 
