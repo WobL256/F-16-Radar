@@ -24,8 +24,8 @@ PURPLE = (255, 0, 255, 255)
 DEBUG = (200, 10, 200, 255)
 
 #create display window
-SCREEN_HEIGHT = 1024
-SCREEN_WIDTH = 2048
+SCREEN_HEIGHT = 2048
+SCREEN_WIDTH = 1024
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('RADAR')
@@ -58,7 +58,7 @@ pygame.key.set_repeat(100, 100)
 #text setup
 
 pygame.font.init()
-dfont = pygame.font.SysFont('Comic Sans MS', 64)
+dfont = pygame.font.Font('VCR_OSD_MONO_1.001.ttf', 64)
 
 #radar settings variables
 azimuth = 30
