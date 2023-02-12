@@ -1,6 +1,15 @@
 import pygame
 import button
 
+#define render dimensions
+RENDER_SCALE = 0.5
+
+SCREEN_HEIGHT = 2048
+SCREEN_WIDTH = 1024
+
+WINDOW_HEIGHT = 1024
+WINDOW_WIDTH = 512
+
 def fill(surface, color):
 #Fill all pixels of the surface with color, preserve transparency
     w, h = surface.get_size()
@@ -24,12 +33,19 @@ PURPLE = (255, 0, 255, 255)
 DEBUG = (200, 10, 200, 255)
 
 #create display window
-SCREEN_HEIGHT = 2048
-SCREEN_WIDTH = 1024
-
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+win_screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption('F-16 Radar Simulation')
 clock = pygame.time.Clock()
+WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
+
+def scale(dir, value):
+	
+	if dir == 'x':
+		return WINDOW_WIDTH * value
+	if dir == 'y':
+		return WINDOW_HEIGHT * value
+
 
 #load images
 arrow_img = pygame.image.load('img/arrow.png').convert_alpha()
@@ -90,8 +106,8 @@ ovrd_button = button.Button(618, 0, button_img,1, 0, "OVRD", WHITE, 0, -6)
 cntl_button = button.Button(791, 0, button_img,1, 0, "CNTL", WHITE, 0, -6)
 range_up_btn = button.Button(0, 154, arrow_small_img, 0.3, 0)
 range_down_btn = button.Button(-1, 310, arrow_small_img, 0.3, 180)
-azimuth_btn = button.Button(0, 460, button_s_img, 0.625, 0)
-elevation_btn = button.Button(0, 620, button_s_img, 0.625, 0)
+azimuth_btn = button.Button(0, 460, button_img, 0.9, 90)
+elevation_btn = button.Button(0, 620, button_img, 0.9, 90)
 
 #game loop
 run = True
@@ -100,8 +116,13 @@ while run:
 	#set framerate (30 best, 60 unstable)
 	dt = clock.tick(30)
 	
+	#continuously get the window dimensions (windows)
+	WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
+	#print(WINDOW_HEIGHT, WINDOW_WIDTH)
+
 	#background color
 	screen.fill(BLACK)
+	win_screen.fill(BLACK)
 	
 	#radar variable handling
 	#--azimuth lines
@@ -304,15 +325,15 @@ while run:
 	
 	#draw text
 	range_text = dfont.render(str(radar_range), False, WHITE)
-	screen.blit(range_text, (16, 252))
+	screen.blit(range_text, (4, 230))
 	azimuth_text = dfont.render('A', False, WHITE)
 	azimuth_number = dfont.render(az_text, False, WHITE)
-	screen.blit(azimuth_text, (12, 457))
-	screen.blit(azimuth_number, (16, 503))
+	screen.blit(azimuth_text, (4, 457))
+	screen.blit(azimuth_number, (4, 503))
 	elevation_text = dfont.render('B', False, WHITE)
 	elevation_number = dfont.render(str(bar_setting), False, WHITE)
-	screen.blit(elevation_number, (16, 618))
-	screen.blit(elevation_text, (14, 662))
+	screen.blit(elevation_number, (4, 618))
+	screen.blit(elevation_text, (4, 662))
 
 	#event handler
 	for event in pygame.event.get():
@@ -320,6 +341,7 @@ while run:
 		if event.type == pygame.QUIT:
 			run = False
 
+	win_screen.blit(pygame.transform.scale(screen, (WINDOW_HEIGHT/2, WINDOW_HEIGHT)), (0, 0))
 	pygame.display.update()
 
 pygame.quit()
