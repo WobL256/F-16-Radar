@@ -1,7 +1,7 @@
 import pygame
 
 pygame.font.init()
-dfont = pygame.font.SysFont('Comic Sans MS', 64)
+dfont = pygame.font.Font('SamsungSans-Regular.ttf', 64)
 
 #button class   button(x, y, image, scale, rot, text_in, color, xoff, yoff)
 class Button():

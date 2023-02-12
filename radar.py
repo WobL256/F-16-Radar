@@ -27,8 +27,8 @@ DEBUG = (200, 10, 200, 255)
 SCREEN_HEIGHT = 2048
 SCREEN_WIDTH = 1024
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('RADAR')
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+pygame.display.set_caption('F-16 Radar Simulation')
 clock = pygame.time.Clock()
 
 #load images
@@ -58,7 +58,7 @@ pygame.key.set_repeat(100, 100)
 #text setup
 
 pygame.font.init()
-dfont = pygame.font.Font('VCR_OSD_MONO_1.001.ttf', 64)
+dfont = pygame.font.Font('SamsungSans-Regular.ttf', 64)
 
 #radar settings variables
 azimuth = 30
@@ -127,21 +127,16 @@ while run:
 			upd_right_az = False
 		
 	#--azimuth button stuff
-	if az_var == 1:
-		az_text = '1'
-	elif az_var == 2:
-		az_text = '3'
-	elif az_var == 3:
-		az_text = '6'
-	else:
+	az_values = {
+		1: ('1', 10),
+		2: ('3', 30),
+		3: ('6', 60)
+	}
+	
+	try:
+		az_text, azimuth = az_values[az_var]
+	except KeyError:
 		az_text = 'ERROR'
-		
-	if az_var == 1:
-		azimuth = 10
-	elif az_var == 2:
-		azimuth = 30
-	elif az_var == 3:
-		azimuth = 60
 		
 	#--sweep stuff
 	if az_var < 3:
