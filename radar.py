@@ -97,7 +97,7 @@ elevation_btn = button.Button(0, 620, button_s_img, 0.625, 0)
 run = True
 while run:
 	
-	#set framerate (30 best, 60 untested)
+	#set framerate (30 best, 60 unstable)
 	dt = clock.tick(30)
 	
 	#background color
