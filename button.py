@@ -1,11 +1,11 @@
 import pygame
 
 pygame.font.init()
-dfont = pygame.font.Font('SamsungSans-Regular.ttf', 64)
+dfont = pygame.font.Font('mfdfont.ttf', 64)
 
 #button class   button(x, y, image, scale, rot, text_in, color, xoff, yoff)
 class Button():
-	def __init__(self, x, y, image, scale = 1, rot = 0, text_in = ' ', color = 'WHITE', xoff = 0, yoff = 0):
+	def __init__(self, x, y, image, scale = 1, rot = 0, text_in = '', color = 'WHITE', xoff = 0, yoff = 0):
 		self.xoff = xoff
 		self.yof = yoff
 		self.x = x

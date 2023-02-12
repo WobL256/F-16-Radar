@@ -32,15 +32,15 @@ pygame.display.set_caption('F-16 Radar Simulation')
 clock = pygame.time.Clock()
 
 #load images
-arrow_img = pygame.image.load('arrow.png').convert_alpha()
-cursor_img = pygame.image.load('cursor.png').convert_alpha()
-button_img = pygame.image.load('btn_tmp.png').convert_alpha()
-button_s_img = pygame.image.load('btn_tmp_s.png').convert_alpha()
-arrow_small_img = pygame.image.load('ArrowS.png').convert_alpha()
-sweep_img = pygame.image.load('sweep.png').convert_alpha()
+arrow_img = pygame.image.load('img/arrow.png').convert_alpha()
+cursor_img = pygame.image.load('img/cursor.png').convert_alpha()
+button_img = pygame.image.load('img/btn_tmp.png').convert_alpha()
+button_s_img = pygame.image.load('img/btn_tmp_s.png').convert_alpha()
+arrow_small_img = pygame.image.load('img/ArrowS.png').convert_alpha()
+sweep_img = pygame.image.load('img/sweep.png').convert_alpha()
 sweep_img = pygame.transform.rotozoom(sweep_img, 0, 0.5)
 bar_img = pygame.transform.rotozoom(sweep_img, 270, 1)
-horizon_img = pygame.image.load('horizon.png').convert_alpha()
+horizon_img = pygame.image.load('img/horizon.png').convert_alpha()
 
 #-modify loaded images
 fill(sweep_img, CYAN)
@@ -58,7 +58,7 @@ pygame.key.set_repeat(100, 100)
 #text setup
 
 pygame.font.init()
-dfont = pygame.font.Font('SamsungSans-Regular.ttf', 64)
+dfont = pygame.font.Font('mfdfont.ttf', 64)
 
 #radar settings variables
 azimuth = 30
