@@ -2,7 +2,7 @@ import pygame
 import button
 
 #define render dimensions
-RENDER_SCALE = 0.5
+MOBILE_MODE = True
 
 SCREEN_HEIGHT = 2048
 SCREEN_WIDTH = 1024
@@ -33,19 +33,14 @@ PURPLE = (255, 0, 255, 255)
 DEBUG = (200, 10, 200, 255)
 
 #create display window
-screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-win_screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
+if MOBILE_MODE == False:
+	screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+	win_screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
+else:
+	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('F-16 Radar Simulation')
 clock = pygame.time.Clock()
 WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
-
-def scale(dir, value):
-	
-	if dir == 'x':
-		return WINDOW_WIDTH * value
-	if dir == 'y':
-		return WINDOW_HEIGHT * value
-
 
 #load images
 arrow_img = pygame.image.load('img/arrow.png').convert_alpha()
@@ -122,7 +117,8 @@ while run:
 
 	#background color
 	screen.fill(BLACK)
-	win_screen.fill(BLACK)
+	if MOBILE_MODE == False:
+		win_screen.fill(BLACK)
 	
 	#radar variable handling
 	#--azimuth lines
@@ -341,7 +337,8 @@ while run:
 		if event.type == pygame.QUIT:
 			run = False
 
-	win_screen.blit(pygame.transform.scale(screen, (WINDOW_HEIGHT/2, WINDOW_HEIGHT)), (0, 0))
+	if MOBILE_MODE == False:
+		 win_screen.blit(pygame.transform.scale(screen, (WINDOW_HEIGHT/2, WINDOW_HEIGHT)), (0, 0))
 	pygame.display.update()
 
 pygame.quit()
