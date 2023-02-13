@@ -1,7 +1,7 @@
 import pygame
 
 pygame.font.init()
-dfont = pygame.font.Font('mfdfont.ttf', 64)
+dfont = pygame.font.Font('font/mfdfont.ttf', 64)
 
 #button class   button(x, y, image, scale, rot, text_in, color, xoff, yoff)
 class Button():

@@ -1,14 +1,25 @@
 import pygame
 import button
+import configparser
 
-#define render dimensions
-MOBILE_MODE = True
+#load variables from config file
+config = configparser.RawConfigParser()
+config.read('settings.cfg')
 
-SCREEN_HEIGHT = 2048
-SCREEN_WIDTH = 1024
+#print all settings (debug)
+for section in config.sections():
+    print(section)
+    for option in config.options(section):
+        text = '{} {}'.format(option, config.get(section,option))
+        print(text)
 
-WINDOW_HEIGHT = 1024
-WINDOW_WIDTH = 512
+#set variables to values from config file
+MOBILE_MODE = bool(config.get('MOBILE','MOBILE_MODE')=='True')
+SCREEN_HEIGHT = int(config.get('RENDERING','SCREEN_HEIGHT'))
+SCREEN_WIDTH = int(config.get('RENDERING','SCREEN_WIDTH'))
+
+WINDOW_HEIGHT = int(config.get('RENDERING','WINDOW_HEIGHT'))
+WINDOW_WIDTH = int(config.get('RENDERING','WINDOW_WIDTH'))
 
 def fill(surface, color):
 #Fill all pixels of the surface with color, preserve transparency
@@ -69,7 +80,7 @@ pygame.key.set_repeat(100, 100)
 #text setup
 
 pygame.font.init()
-dfont = pygame.font.Font('mfdfont.ttf', 64)
+dfont = pygame.font.Font('font/mfdfont.ttf', 64)
 
 #radar settings variables
 azimuth = 30
@@ -306,7 +317,7 @@ while run:
 	if pressed[pygame.K_s]:
 		print('down')
 		if cursor.y <= 959:
-			cursor.move(0, 2 * dt)
+			cursor.move_ip(0, 2 * dt)
 	if pressed[pygame.K_a]:
 		print('left')
 		if cursor.x >= 4:
