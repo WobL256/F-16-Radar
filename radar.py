@@ -338,7 +338,7 @@ while run:
 			run = False
 
 	if MOBILE_MODE == False:
-		 win_screen.blit(pygame.transform.scale(screen, (WINDOW_HEIGHT/2, WINDOW_HEIGHT)), (0, 0))
+		win_screen.blit(pygame.transform.scale(screen, (WINDOW_HEIGHT/2, WINDOW_HEIGHT)), (0, 0))
 	pygame.display.update()
 
 pygame.quit()
