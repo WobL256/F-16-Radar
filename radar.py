@@ -117,18 +117,7 @@ range_down_btn = button.Button(-1, 310, arrow_small_img, 0.3, 180)
 azimuth_btn = button.Button(0, 460, button_img, 0.9, 90)
 elevation_btn = button.Button(0, 620, button_img, 0.9, 90)
 
-#game loop
-run = True
-while run:
-	
-	#set framerate
-	dt = clock.tick(60)
-	
-	#continuously get the window dimensions (windows)
-	WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
-	#print(WINDOW_HEIGHT, WINDOW_WIDTH)
-
-	#background color
+def FillScreen():
 	if DEBUG_MODE == False:
 		screen.fill(BLACK)
 		if MOBILE_MODE == False:
@@ -137,7 +126,19 @@ while run:
 		screen.fill(DEBUG)
 		if MOBILE_MODE == False:
 			win_screen.fill(DEBUG)
+def WindowDim():
+	#continuously get the window dimensions (windows)
+	WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
+
+#game loop
+run = True
+while run:
 	
+	#set framerate and init game
+	dt = clock.tick(60)
+	WindowDim()
+	FillScreen()
+
 	#radar variable handling
 	#--azimuth lines
 	if az_var != 3:
