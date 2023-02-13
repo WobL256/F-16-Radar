@@ -15,6 +15,8 @@ for section in config.sections():
 
 #set variables to values from config file
 MOBILE_MODE = bool(config.get('MOBILE','MOBILE_MODE')=='True')
+DEBUG_MODE = bool(config.get('DEBUG', 'DEBUG_MODE')=='True')
+
 SCREEN_HEIGHT = int(config.get('RENDERING','SCREEN_HEIGHT'))
 SCREEN_WIDTH = int(config.get('RENDERING','SCREEN_WIDTH'))
 
@@ -119,17 +121,22 @@ elevation_btn = button.Button(0, 620, button_img, 0.9, 90)
 run = True
 while run:
 	
-	#set framerate (30 best, 60 unstable)
-	dt = clock.tick(30)
+	#set framerate
+	dt = clock.tick(60)
 	
 	#continuously get the window dimensions (windows)
 	WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
 	#print(WINDOW_HEIGHT, WINDOW_WIDTH)
 
 	#background color
-	screen.fill(BLACK)
-	if MOBILE_MODE == False:
-		win_screen.fill(BLACK)
+	if DEBUG_MODE == False:
+		screen.fill(BLACK)
+		if MOBILE_MODE == False:
+			win_screen.fill(BLACK)
+	else:
+		screen.fill(DEBUG)
+		if MOBILE_MODE == False:
+			win_screen.fill(DEBUG)
 	
 	#radar variable handling
 	#--azimuth lines
