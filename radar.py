@@ -1,5 +1,5 @@
 import pygame
-import button
+#import button
 import configparser
 
 #load variables from config file
@@ -105,17 +105,84 @@ px_per_bar = 21
 bar = 1
 el_pos = 0
 
+
+
+
+
+
+
+
+
+
+scale_x = win_screen.get_width() / SCREEN_WIDTH
+scale_y = win_screen.get_height() / SCREEN_HEIGHT
+
+#Setup font
+pygame.font.init()
+bfont = pygame.font.Font('font/mfdfont.ttf', 64)
+
+
+class Button():
+	def __init__(self, x, y, image, scale = 1, rot = 0, text_in = '', color = 'WHITE', xoff = 0, yoff = 0):
+		self.xoff = xoff
+		self.yof = yoff
+		self.x = x
+		self.y = y
+		self.scale = scale
+		width = image.get_width()
+		height = image.get_height()
+		self.image = pygame.transform.rotozoom(image, rot, scale)
+		self.text_in = text_in
+		self.text = bfont.render(self.text_in, True, color)
+		self.text_rect = self.text.get_rect(center=(self.x +width/(2/scale) + xoff, self.y + height/(2/scale) + yoff))
+		self.rect = self.image.get_rect()
+		self.rect.topleft = (x, y)
+		self.clicked = False
+
+	def draw(self, surface):
+		action = False
+		#get mouse position
+		pos = pygame.mouse.get_pos()
+		posf = (int(pos[0] / scale_x), int(pos[1] / scale_y))
+		#print(posf)
+		#check mouseover and clicked conditions
+		if self.rect.collidepoint(posf):
+			if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+				self.clicked = True
+				action = True
+
+		if pygame.mouse.get_pressed()[0] == 0:
+			self.clicked = False
+
+		#draw button on screen
+		surface.blit(self.image, (self.rect.x, self.rect.y))
+		surface.blit(self.text, self.text_rect)
+
+		return action
+
+
+
+
+
+
+
+
+
+
+
+
+
 #create button instances
 #---screen buttons (non updating)
-mode_button = button.Button(113, 0, button_img,1, 0, "CRM", WHITE, 0, -6)
-scan_mode_button = button.Button(269, 0, button_img,1, 0, "RWS", WHITE, 0, -6)
-exp_button = button.Button(440, 0, button_img,1, 0, "NORM", WHITE, 0, -6)
-ovrd_button = button.Button(618, 0, button_img,1, 0, "OVRD", WHITE, 0, -6)
-cntl_button = button.Button(791, 0, button_img,1, 0, "CNTL", WHITE, 0, -6)
-range_up_btn = button.Button(0, 154, arrow_small_img, 0.3, 0)
-range_down_btn = button.Button(-1, 310, arrow_small_img, 0.3, 180)
-azimuth_btn = button.Button(0, 460, button_img, 0.9, 90)
-elevation_btn = button.Button(0, 620, button_img, 0.9, 90)
+mode_button = Button(113, 0, button_img,1, 0, "CRM", WHITE, 0, -6)
+scan_mode_button = Button(269, 0, button_img,1, 0, "RWS", WHITE, 0, -6)
+exp_button = Button(440, 0, button_img,1, 0, "NORM", WHITE, 0, -6)
+ovrd_button = Button(618, 0, button_img,1, 0, "OVRD", WHITE, 0, -6)
+cntl_button = Button(791, 0, button_img,1, 0, "CNTL", WHITE, 0, -6)
+range_up_btn = Button(0, 154, arrow_small_img, 0.3, 0)
+range_down_btn = Button(-1, 310, arrow_small_img, 0.3, 180)
+azimuth_btn = Button(0, 460, button_img, 0.9, 90)
+elevation_btn = Button(0, 620, button_img, 0.9, 90)
 
 def FillScreen():
 	if DEBUG_MODE == False:
@@ -285,12 +352,12 @@ while run:
 	screen.blit(bar_img, (42, el_pos))
 	
 	#screen controls
-	uparrow = button.Button(128, 1128, arrow_img, 0.5, 0, "slew", WHITE, 0, 128)
-	rightarrow = button.Button(256, 1256, arrow_img, 0.5, 270)
-	downarrow = button.Button(128, 1384, arrow_img, 0.5, 180)
-	leftarrow = button.Button(0, 1256, arrow_img, 0.5, 90)
-	elev_up_btn = button.Button(420, 1120, arrow_small_img, 0.5, 0)
-	elev_down_btn = button.Button(420, 1400, arrow_small_img, 0.5, 180)
+	uparrow = Button(128, 1128, arrow_img, 0.5, 0, "SLEW", WHITE, 0, 128)
+	rightarrow = Button(256, 1256, arrow_img, 0.5, 270)
+	downarrow = Button(128, 1384, arrow_img, 0.5, 180)
+	leftarrow = Button(0, 1256, arrow_img, 0.5, 90)
+	elev_up_btn = Button(420, 1120, arrow_small_img, 0.5, 0)
+	elev_down_btn = Button(420, 1400, arrow_small_img, 0.5, 180)
  	
 	if uparrow.draw(screen):
 		print('UP')
@@ -357,7 +424,7 @@ while run:
 			run = False
 
 	if MOBILE_MODE == False:
-		win_screen.blit(pygame.transform.scale(screen, (WINDOW_HEIGHT/2, WINDOW_HEIGHT)), (0, 0))
+		win_screen.blit(pygame.transform.scale(screen, (win_screen.get_width()/((SCREEN_WIDTH/win_screen.get_width())*SCREEN_WIDTH), WINDOW_HEIGHT)), (0, 0))
 	pygame.display.update()
 
 pygame.quit()
