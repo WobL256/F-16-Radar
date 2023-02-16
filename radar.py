@@ -1,7 +1,7 @@
 import pygame
-#import button
 import configparser
 import platform
+import time
 
 #load variables from config file
 config = configparser.RawConfigParser()
@@ -36,17 +36,31 @@ def fill(surface, color):
             surface.set_at((x, y), pygame.Color(r, g, b, a))
 
 #color palette
-BLACK = (0, 0, 0, 255)
-WHITE = (255, 255, 255, 255)
-RED = (255, 0, 0, 255)
-ORANGE = (255, 127, 0, 255)
-YELLOW = (255, 255, 0, 255)
-GREEN = (0, 255, 0, 255)
-CYAN = (0, 255, 255, 255)
-DCYAN = (0, 170, 230, 255)
-BLUE = (0, 0, 255, 255)
-PURPLE = (255, 0, 255, 255)
-DEBUG = (200, 10, 200, 255)
+
+def colorPalette():
+	global BLACK
+	global WHITE
+	global RED
+	global ORANGE
+	global YELLOW
+	global GREEN
+	global CYAN
+	global DCYAN
+	global BLUE
+	global PURPLE
+	global DEBUG
+	BLACK = (0, 0, 0, 255)
+	WHITE = (255, 255, 255, 255)
+	RED = (255, 0, 0, 255)
+	ORANGE = (255, 127, 0, 255)
+	YELLOW = (255, 255, 0, 255)
+	GREEN = (0, 255, 0, 255)
+	CYAN = (0, 255, 255, 255)
+	DCYAN = (0, 170, 230, 255)
+	BLUE = (0, 0, 255, 255)
+	PURPLE = (255, 0, 255, 255)
+	DEBUG = (200, 10, 200, 255)
+colorPalette()
 
 #create display window
 pygame.init()
@@ -60,7 +74,7 @@ pygame.display.set_caption('F-16 Radar Simulation')
 clock = pygame.time.Clock()
 WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
 
-#load images
+
 arrow_img = pygame.image.load('img/arrow.png').convert_alpha()
 cursor_img = pygame.image.load('img/cursor.png').convert_alpha()
 button_img = pygame.image.load('img/btn_tmp.png').convert_alpha()
@@ -87,7 +101,7 @@ pygame.key.set_repeat(100, 100)
 #text setup
 
 pygame.font.init()
-dfont = pygame.font.Font('font/mfdfont.ttf', 64)
+dfont = pygame.font.Font('font/mfdfont.ttf', 46)
 
 #radar settings variables
 azimuth = 30
@@ -110,23 +124,12 @@ px_per_bar = 21
 bar = 1
 el_pos = 0
 
-
-
-
-
-
-
-
-
-
-scale_x = win_screen.get_width() / SCREEN_WIDTH
-scale_y = win_screen.get_height() / SCREEN_HEIGHT
-
+#Buttons setup
 #Setup font
 pygame.font.init()
-bfont = pygame.font.Font('font/mfdfont.ttf', 64)
+bfont = pygame.font.Font('font/mfdfont.ttf', 46)
 
-
+#Button class
 class Button():
 	def __init__(self, x, y, image, scale = 1, rot = 0, text_in = '', color = 'WHITE', xoff = 0, yoff = 0):
 		self.xoff = xoff
@@ -147,6 +150,8 @@ class Button():
 	def draw(self, surface):
 		action = False
 		#get mouse position
+		scale_y = win_screen.get_height() / SCREEN_HEIGHT
+		scale_x = (win_screen.get_height() / 2) / SCREEN_WIDTH
 		pos = pygame.mouse.get_pos()
 		posf = (int(pos[0] / scale_x), int(pos[1] / scale_y))
 		#print(posf)
@@ -164,18 +169,6 @@ class Button():
 		surface.blit(self.text, self.text_rect)
 
 		return action
-
-
-
-
-
-
-
-
-
-
-
-
 
 #create button instances
 #---screen buttons (non updating)
@@ -201,6 +194,43 @@ def FillScreen():
 def WindowDim():
 	#continuously get the window dimensions (windows)
 	WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
+
+
+#MENUS and menu related variables
+drawRange = True
+drawAzimuth = True
+drawBars = True
+modeMenuOpen = False
+
+def Modes_Menu():
+    global crm_btn
+    global acm_btn
+    crm_btn = Button(0, 154,button_img, 0.8, 0, "CRM",WHITE, 0, -6)
+    acm_btn = Button(-1, 310,button_img, 0.8, 0, "ACM",WHITE, 0, -6)
+Modes_Menu()
+def MenuHandler():
+	global modeMenuOpen, drawRange, drawAzimuth, drawBars
+	if modeMenuOpen == True:
+		#disable some other buttons drawing
+		drawRange = False
+		drawAzimuth = False
+		drawBars = False
+		#draw the menu specific buttons
+		if crm_btn.draw(screen):
+			modeMenuOpen = False
+			drawRange = True
+			drawAzimuth = True
+			drawBars = True
+			
+			print('CRM Selected')
+		if acm_btn.draw(screen):
+			modeMenuOpen = False
+			drawRange = True
+			drawAzimuth = True
+			drawBars = True
+			print('ACM Selected')
+		
+	
 
 #game loop
 run = True
@@ -292,57 +322,61 @@ while run:
 	#--az lines
 	if(az_var != 3):
 		if upd_right_az == True:
-			pygame.draw.line(screen, CYAN, (az_pos_left, 96), (az_pos_left, 928), width=5)
+			pygame.draw.line(screen, CYAN, (az_pos_left, 96), (az_pos_left, 914), width=5)
 		if upd_left_az == True:
-			pygame.draw.line(screen, CYAN, (az_pos_right, 96), (az_pos_right, 928), width=5)
+			pygame.draw.line(screen, CYAN, (az_pos_right, 96), (az_pos_right, 914), width=5)
 	
 	pygame.draw.rect(screen, WHITE, (0, 0, 1024, 1024), width=3) #frame
-	pygame.draw.rect(screen, BLACK, (0, 230, 78, 80))
+	if drawRange:
+		pygame.draw.rect(screen, BLACK, (0, 230, 78, 80))
 	
-	screen.blit(sweep_img, (sweep_x - 16, 980))
+	screen.blit(sweep_img, (sweep_x - 16, 950))
 	
 	#--azimuth tape
-	pygame.draw.line(screen, CYAN, (512, 930), (512,974), width=8)
-	pygame.draw.line(screen, CYAN, (256, 940), (256,974), width=6)
-	pygame.draw.line(screen, CYAN, (768, 940), (768,974), width=6)
-	pygame.draw.line(screen, CYAN, (597, 940), (597,974), width=6)
-	pygame.draw.line(screen, CYAN, (682, 940), (682,974), width=6)
-	pygame.draw.line(screen, CYAN, (427, 940), (427,974), width=6)
-	pygame.draw.line(screen, CYAN, (342, 940), (342,974), width=6)
+	pygame.draw.line(screen, CYAN, (512, 900), (512,944), width=8)
+	pygame.draw.line(screen, CYAN, (256, 910), (256,944), width=6)
+	pygame.draw.line(screen, CYAN, (768, 910), (768,944), width=6)
+	pygame.draw.line(screen, CYAN, (597, 910), (597,944), width=6)
+	pygame.draw.line(screen, CYAN, (682, 910), (682,944), width=6)
+	pygame.draw.line(screen, CYAN, (427, 910), (427,944), width=6)
+	pygame.draw.line(screen, CYAN, (342, 910), (342,944), width=6)
 	
 	#--elevation tape
-	pygame.draw.line(screen, CYAN, (80, 512), (124,512), width=8)
-	pygame.draw.line(screen, CYAN, (80, 256), (114,256), width=6)
-	pygame.draw.line(screen, CYAN, (80, 768), (114,768), width=6)
-	pygame.draw.line(screen, CYAN, (80, 683), (114,683), width=6)
-	pygame.draw.line(screen, CYAN, (80, 598), (114,598), width=6)
-	pygame.draw.line(screen, CYAN, (80, 341), (114,341), width=6)
-	pygame.draw.line(screen, CYAN, (80, 426), (114,426), width=6)
+	pygame.draw.line(screen, CYAN, (100, 512), (144,512), width=8)
+	pygame.draw.line(screen, CYAN, (100, 256), (134,256), width=6)
+	pygame.draw.line(screen, CYAN, (100, 768), (134,768), width=6)
+	pygame.draw.line(screen, CYAN, (100, 683), (134,683), width=6)
+	pygame.draw.line(screen, CYAN, (100, 598), (134,598), width=6)
+	pygame.draw.line(screen, CYAN, (100, 341), (134,341), width=6)
+	pygame.draw.line(screen, CYAN, (100, 426), (134,426), width=6)
 	
 	#render things
 	screen.blit(horizon_img, (256, 512-32))
-	
 	#screen buttons render/action
-	if radar_range < 160:
-		if range_up_btn.draw(screen):
-			print("Range Up")
-			radar_range = int(radar_range * 2)
-	if radar_range > 5:
-		if range_down_btn.draw(screen):
-			print("Range Down")
-			radar_range = int(radar_range / 2)
-	if azimuth_btn.draw(screen):
-		print("Azimuth Change")
-		if az_var <= 3 and az_var != 1:
-			az_var = az_var - 1
-		elif az_var == 1:
-			az_var = 3
-	if elevation_btn.draw(screen):
-		if bar_setting < 4:
-			bar_setting = bar_setting * 2
-		else:
-			bar_setting = 1
+	if drawRange:
+		if radar_range < 160:
+			if range_up_btn.draw(screen):
+				print("Range Up")
+				radar_range = int(radar_range * 2)
+		if radar_range > 5:
+			if range_down_btn.draw(screen):
+				print("Range Down")
+				radar_range = int(radar_range / 2)
+	if drawAzimuth:
+		if azimuth_btn.draw(screen):
+			print("Azimuth Change")
+			if az_var <= 3 and az_var != 1:
+				az_var = az_var - 1
+			elif az_var == 1:
+				az_var = 3
+	if drawBars:
+		if elevation_btn.draw(screen):
+			if bar_setting < 4:
+				bar_setting = bar_setting * 2
+			else:
+				bar_setting = 1
 	if mode_button.draw(screen):
+		modeMenuOpen = True
 		print("Mode Page Open")
 	if scan_mode_button.draw(screen):
 		print("Scan Mode Change")
@@ -354,7 +388,10 @@ while run:
 		print("Control Page Open")
 	
 	#temp
-	screen.blit(bar_img, (42, el_pos))
+	screen.blit(bar_img, (62, el_pos))
+
+	#menus handling
+	MenuHandler()
 	
 	#screen controls
 	uparrow = Button(128, 1128, arrow_img, 0.5, 0, "SLEW", WHITE, 0, 128)
@@ -411,16 +448,19 @@ while run:
 	screen.blit(bigcursor_img, cursor)
 	
 	#draw text
-	range_text = dfont.render(str(radar_range), False, WHITE)
-	screen.blit(range_text, (4, 230))
-	azimuth_text = dfont.render('A', False, WHITE)
-	azimuth_number = dfont.render(az_text, False, WHITE)
-	screen.blit(azimuth_text, (4, 457))
-	screen.blit(azimuth_number, (4, 503))
-	elevation_text = dfont.render('B', False, WHITE)
-	elevation_number = dfont.render(str(bar_setting), False, WHITE)
-	screen.blit(elevation_number, (4, 618))
-	screen.blit(elevation_text, (4, 662))
+	if drawRange:
+		range_text = dfont.render(str(radar_range), False, WHITE)
+		screen.blit(range_text, (4, 230))
+	if drawAzimuth:
+		azimuth_text = dfont.render('A', False, WHITE)
+		azimuth_number = dfont.render(az_text, False, WHITE)
+		screen.blit(azimuth_text, (4, 457))
+		screen.blit(azimuth_number, (4, 503))
+	if drawBars:
+		elevation_text = dfont.render('B', False, WHITE)
+		elevation_number = dfont.render(str(bar_setting), False, WHITE)
+		screen.blit(elevation_number, (4, 618))
+		screen.blit(elevation_text, (4, 662))
 
 	#event handler
 	for event in pygame.event.get():
@@ -429,7 +469,7 @@ while run:
 			run = False
 
 	if MOBILE_MODE == False:
-		win_screen.blit(pygame.transform.scale(screen, (win_screen.get_height()/2, win_screen.get_height()), (0, 0)))
+		win_screen.blit(pygame.transform.scale(screen, (win_screen.get_height()/2, win_screen.get_height())), (0, 0))
 	else:
 		win_screen.blit(pygame.transform.scale(screen, (win_screen.get_width(), win_screen.get_height())), (0,0))
 		
