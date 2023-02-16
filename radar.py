@@ -201,6 +201,9 @@ drawRange = True
 drawAzimuth = True
 drawBars = True
 modeMenuOpen = False
+radarMode = 1 #1=CRM 2=ACM
+acmMode = 1 #1=HUD 2=VERT 3=BORE
+acmText = "60"
 
 def Modes_Menu():
     global crm_btn
@@ -208,6 +211,11 @@ def Modes_Menu():
     crm_btn = Button(0, 154,button_img, 0.8, 0, "CRM",WHITE, 0, -6)
     acm_btn = Button(-1, 310,button_img, 0.8, 0, "ACM",WHITE, 0, -6)
 Modes_Menu()
+def ACM_Menu():
+    global crm_btn
+    global acm_btn
+    acm_subsetting_btn = Button(0, 154,button_img, 0.8, 0, acmText,WHITE, 0, -6)
+ACM_Menu()
 def MenuHandler():
 	global modeMenuOpen, drawRange, drawAzimuth, drawBars
 	if modeMenuOpen == True:
@@ -229,7 +237,7 @@ def MenuHandler():
 			drawAzimuth = True
 			drawBars = True
 			print('ACM Selected')
-		
+	
 	
 
 #game loop
