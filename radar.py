@@ -1,6 +1,7 @@
 import pygame
 #import button
 import configparser
+import platform
 
 #load variables from config file
 config = configparser.RawConfigParser()
@@ -15,6 +16,8 @@ for section in config.sections():
 
 #set variables to values from config file
 MOBILE_MODE = bool(config.get('MOBILE','MOBILE_MODE')=='True')
+if platform.system()=='Linux':
+	MOBILE_MODE = True
 DEBUG_MODE = bool(config.get('DEBUG', 'DEBUG_MODE')=='True')
 
 SCREEN_HEIGHT = int(config.get('RENDERING','SCREEN_HEIGHT'))
@@ -46,11 +49,13 @@ PURPLE = (255, 0, 255, 255)
 DEBUG = (200, 10, 200, 255)
 
 #create display window
+pygame.init()
 if MOBILE_MODE == False:
 	screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 	win_screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
 else:
-	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+	screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+	win_screen = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h))
 pygame.display.set_caption('F-16 Radar Simulation')
 clock = pygame.time.Clock()
 WINDOW_WIDTH, WINDOW_HEIGHT = pygame.display.get_surface().get_size()
@@ -424,7 +429,10 @@ while run:
 			run = False
 
 	if MOBILE_MODE == False:
-		win_screen.blit(pygame.transform.scale(screen, (win_screen.get_width()/((SCREEN_WIDTH/win_screen.get_width())*SCREEN_WIDTH), WINDOW_HEIGHT)), (0, 0))
+		win_screen.blit(pygame.transform.scale(screen, (win_screen.get_height()/2, win_screen.get_height()), (0, 0)))
+	else:
+		win_screen.blit(pygame.transform.scale(screen, (win_screen.get_width(), win_screen.get_height())), (0,0))
+		
 	pygame.display.update()
-
+		
 pygame.quit()
