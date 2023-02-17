@@ -18,17 +18,40 @@ of the radar coverage in front of the aircraft.
 This will come after a serious restructuring of
 the simulator.
 
-Currently only the right side buttons (range,
-azimuth, elevation settings) are functional.
-The top row of buttons functionality is planned.
-This will include ACM radar functionality,
-switching radar modes from CRM to ACM,
-Track-While-Scan (TWS) mode, Expand modes
-(basically zoom function), Radar Override and
-the Control menu.
+Current functionality:
+- [x] CRM Mode
+- [x] RWS Mode
+- [ ] TWS Mode
+- [x] ACM Mode
+- [ ] GM, GMT, SEA, BCN Modes
+- [ ] STBY and OVRD
+- [x] Changing Azimuth, Elevation and Range
+- [ ] CNTL menu
+- [ ] Expand and DBS Modes
+- [ ] Locking targets (radar model)
 
-*GM, GMT and SEA modes may be implemented too.
+The top row of buttons functionality is currently
+in the works. The radar mode selection button
+(far left) is working. After the ACM radar is
+100% complete, work will begin on the CRM Mode
+selection button (reading RWS in the above
+screenshot). This will also include Track-While-Scan
+(TWS) mode. Then the next buttons. After all
+buttons and menus are done, work will begin
+on adding lockable targets.
+
+*GM, GMT and SEA modes may or may not be
+implemented too at a later date. 
 
 It supports both mobile and desktop. If it is
 running on mobile,the MOBILE_MODE variable in
-**radar.py** must be set to True.
+**radar.py** must be set to True. There is a
+somewhat working automatic device detection
+built in, but it only works for detecting
+Android or Windows/OSX. If you run it on
+Linux, it will activate mobile mode.
+
+There are plans to release native Windows and
+Android builds of this app, however this will
+happen in the future when the app will be
+in a better shape.
