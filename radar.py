@@ -1,7 +1,6 @@
 import pygame
 import configparser
 import platform
-import time
 
 #load variables from config file
 config = configparser.RawConfigParser()
@@ -200,6 +199,7 @@ def WindowDim():
 drawRange = True
 drawAzimuth = True
 drawBars = True
+drawScanMode = True
 modeMenuOpen = False
 radarMode = 1 #1=CRM 2=ACM
 acmMode = 1 #1=HUD 2=VERT 3=BORE
@@ -212,12 +212,11 @@ def Modes_Menu():
     acm_btn = Button(-1, 310,button_img, 0.8, 0, "ACM",WHITE, 0, -6)
 Modes_Menu()
 def ACM_Menu():
-    global crm_btn
-    global acm_btn
-    acm_subsetting_btn = Button(0, 154,button_img, 0.8, 0, acmText,WHITE, 0, -6)
+    global acm_subsetting_btn
+    acm_subsetting_btn = Button(269, 0,button_img, 0.8, 0)
 ACM_Menu()
 def MenuHandler():
-	global modeMenuOpen, drawRange, drawAzimuth, drawBars
+	global modeMenuOpen, drawRange, drawAzimuth, drawBars, drawScanMode, acmMode, radarMode
 	if modeMenuOpen == True:
 		#disable some other buttons drawing
 		drawRange = False
@@ -229,14 +228,23 @@ def MenuHandler():
 			drawRange = True
 			drawAzimuth = True
 			drawBars = True
-			
+			drawScanMode = True
+			radarMode = 1
 			print('CRM Selected')
 		if acm_btn.draw(screen):
 			modeMenuOpen = False
-			drawRange = True
-			drawAzimuth = True
-			drawBars = True
+			drawRange = False
+			drawAzimuth = False
+			drawBars = False
+			drawScanMode = False
+			radarMode = 2
 			print('ACM Selected')
+	if radarMode == 2: #if it is ACM
+		if acm_subsetting_btn.draw(screen):
+			if acmMode < 3:
+				acmMode = acmMode + 1
+			else:
+				acmMode = 1
 	
 	
 
@@ -283,6 +291,23 @@ while run:
 		az_text, azimuth = az_values[az_var]
 	except KeyError:
 		az_text = 'ERROR'
+	
+	#same for acm text
+	if radarMode == 2:
+		upd_left_az = False
+		upd_right_az = False
+		if acmMode == 1:
+			acmText = '20'
+			
+		elif acmMode == 2:
+			acmText = '60'
+			azimuth = -2
+			bar_setting = 38
+			el_cursor = 360
+		elif acmMode == 3:
+			acmText = 'BORE'
+			azimuth = 0
+			bar_setting = 1
 		
 	#--sweep stuff
 	if az_var < 3:
@@ -386,8 +411,9 @@ while run:
 	if mode_button.draw(screen):
 		modeMenuOpen = True
 		print("Mode Page Open")
-	if scan_mode_button.draw(screen):
-		print("Scan Mode Change")
+	if drawScanMode:
+		if scan_mode_button.draw(screen):
+			print("Scan Mode Change")
 	if exp_button.draw(screen):
 		print("Exp Mode Change")
 	if ovrd_button.draw(screen):
@@ -453,7 +479,8 @@ while run:
 			cursor.move_ip(2 * dt, 0)
 		
 	#render cursor
-	screen.blit(bigcursor_img, cursor)
+	if radarMode == 1:
+		screen.blit(bigcursor_img, cursor)
 	
 	#draw text
 	if drawRange:
@@ -469,6 +496,9 @@ while run:
 		elevation_number = dfont.render(str(bar_setting), False, WHITE)
 		screen.blit(elevation_number, (4, 618))
 		screen.blit(elevation_text, (4, 662))
+	if radarMode == 2: #if ACM
+		acm_mode_text = dfont.render(str(acmText), False, WHITE)
+		screen.blit(acm_mode_text, (269, 0))
 
 	#event handler
 	for event in pygame.event.get():
