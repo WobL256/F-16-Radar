@@ -54,4 +54,9 @@ Linux, it will activate mobile mode.
 There are plans to release native Windows and
 Android builds of this app, however this will
 happen in the future when the app will be
-in a better shape.
+in a better shape. An iOS native app is
+currently impossible for me to build as I do
+not own a Mac device. Also, I do not think
+you can run it on iOS because there is no
+python IDE that has PyGame built-in
+available as far as I'm aware.
